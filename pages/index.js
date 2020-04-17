@@ -6,33 +6,6 @@ import { withRedux } from '../lib/redux';
 import { compose } from 'redux';
 import Link from 'next/link';
 
-
-
-const ProductListQuery = () => {
-	const PRODUCT_LIST_QUERY = gql`
-		query ProductList($search: String!, $sortName: SortEnum!, $pageSize: Int!, $currentPage: Int!) {
-			productList(search: $search, sort: {name: $sortName}, pageSize: $pageSize, currentPage: $currentPage) {
-				total_count
-				items {
-					id
-					name
-					url_key
-				}
-			}
-		}
-	`
-
-	return useQuery(
-		PRODUCT_LIST_QUERY,
-		{
-			variables: { search: '', sortName: 'ASC', pageSize: 5, currentPage: 1 },
-			notifyOnNetworkStatusChange: true
-		}
-	);
-}
-
-
-
 const IndexPage = (props) => {
 	const CATEGORY_LIST_QUERY = gql`{
 		categoryList {
@@ -61,7 +34,7 @@ const IndexPage = (props) => {
 	const { loading, error, data } = useQuery(
 		CATEGORY_LIST_QUERY,
 		{
-			variables: { min: 11, max: 20 },
+			variables: {},
 			notifyOnNetworkStatusChange: true
 		}
 	);
@@ -76,22 +49,17 @@ const IndexPage = (props) => {
 			<ul>
 				{data.categoryList.map(category => (
 					<li>
-						{/* <Link
-							href="/[category]"
-							as={`/${category.name}`}>
-							<a>{category.name}</a>
-						</Link> */}
 						{category.name}
 						<ul>
 							{category.children.map(childCategory => (
 								<li>
-									<Link href={`/${childCategory.name}`}>
+									<Link href={`/category/${childCategory.url_key}`}>
 										<a>{childCategory.name}</a>
 									</Link>
 									<ul>
 										{childCategory.children.map(grandChildCategory => (
 											<li>
-												<Link href={`/${childCategory.name}/${grandChildCategory.name}`}>
+												<Link href={`/category/${childCategory.url_key}/${grandChildCategory.url_key}`}>
 													<a>{grandChildCategory.name}</a>
 												</Link>
 											</li>
