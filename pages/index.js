@@ -4,6 +4,7 @@ import gql from 'graphql-tag';
 import { withApollo } from '../lib/apollo';
 import { withRedux } from '../lib/redux';
 import { compose } from 'redux';
+import Link from 'next/link';
 
 
 
@@ -75,15 +76,24 @@ const IndexPage = (props) => {
 			<ul>
 				{data.categoryList.map(category => (
 					<li>
+						{/* <Link
+							href="/[category]"
+							as={`/${category.name}`}>
+							<a>{category.name}</a>
+						</Link> */}
 						{category.name}
 						<ul>
-							{category.children.map(child => (
+							{category.children.map(childCategory => (
 								<li>
-									{child.name}
+									<Link href={`/${childCategory.name}`}>
+										<a>{childCategory.name}</a>
+									</Link>
 									<ul>
-										{child.children.map(grandChild => (
+										{childCategory.children.map(grandChildCategory => (
 											<li>
-												{grandChild.name}
+												<Link href={`/${childCategory.name}/${grandChildCategory.name}`}>
+													<a>{grandChildCategory.name}</a>
+												</Link>
 											</li>
 										))}
 									</ul>
