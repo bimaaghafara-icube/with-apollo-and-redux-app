@@ -3,11 +3,11 @@ import { withApollo } from '../../lib/apollo'
 import { useQuery } from '@apollo/react-hooks'
 import qgl from 'graphql-tag'
 import { useRouter } from 'next/router'
+import Router from 'next/router'
 import Link from 'next/link'
 
 
 const ProductCard = (props) => {
-
 	return (
 		<Fragment>
 			<div className="product-card">
@@ -117,7 +117,7 @@ const ProductList = ({ categoryId }) => {
 						imageUrl={product.image.url}
 						currency={product.price_range.minimum_price.final_price.currency}
 						price={product.price_range.minimum_price.final_price.value}
-						onClick={() => {console.log(product.name)}}
+						onClick={() => {Router.push('/product/[url_key]', `/product/${product.url_key}`)}}
 					/>
 				)}
 			</div>

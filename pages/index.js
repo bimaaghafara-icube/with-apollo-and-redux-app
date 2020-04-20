@@ -59,7 +59,9 @@ const IndexPage = (props) => {
 									<ul>
 										{childCategory.children.map(grandChildCategory => (
 											<li>
-												<Link href={`/category/${childCategory.url_key}/${grandChildCategory.url_key}`}>
+												<Link 
+													href={`/category/${childCategory.url_key}/${grandChildCategory.url_key}`}
+													as={`/category/${childCategory.url_key}/${grandChildCategory.url_key}`}>
 													<a>{grandChildCategory.name}</a>
 												</Link>
 											</li>
