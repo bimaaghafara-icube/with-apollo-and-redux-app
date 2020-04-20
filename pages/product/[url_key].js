@@ -3,10 +3,11 @@ import gql from 'graphql-tag';
 import { withApollo } from '../../lib/apollo';
 import { withRedux } from '../../lib/redux';
 import { compose } from 'redux';
-import { useRouter, Router } from 'next/router'
+import { useRouter, Router } from 'next/router';
+import { useState } from "react";
 
 const ProductPage = () => {
-    const PRODUCT_DETAIL_QUERY = gql`
+  const PRODUCT_DETAIL_QUERY = gql`
       query getProduct($url_key: String!) {
         products(search: "", filter: { url_key: { eq: $url_key } }) {
           total_count
@@ -50,48 +51,51 @@ const ProductPage = () => {
         }
       }
     `;
+  const [count, setCount] = useState(0);
+  const router = useRouter();
+  const { loading, data, error } = useQuery(
+    PRODUCT_DETAIL_QUERY,
+    { variables: { url_key: router.query.url_key } }
+  )
 
-    const router = useRouter();
-    const { loading, data, error } = useQuery(
-      PRODUCT_DETAIL_QUERY,
-      { variables: { url_key: router.query.url_key } }
-    )
-  
-    if (loading) return <p>Loading . . .</p>;
-    if (error) return <p>ERROR: {error.message}</p>;
-    if (!data) return <p>Not found</p>;
-  
-    console.log(router)
-    console.log('PRODUCT_DETAIL_QUERY: ', data)
+  if (loading) return <p>Loading . . .</p>;
+  if (error) return <p>ERROR: {error.message}</p>;
+  if (!data) return <p>Not found</p>;
 
-    const product = data.products.items[0],
-      productName = product.name,
-      productDescription = product.description.html,
-      productImageUrl = product.image.url,
-      productCurrency = product.price_range.minimum_price.final_price.currency,
-      productPrice = product.price_range.minimum_price.final_price.value;      
-  
-    return (
+  console.log('PRODUCT_DETAIL_QUERY: ', data)
+
+  const product = data.products.items[0],
+    productName = product.name,
+    productDescription = product.description.html,
+    productImageUrl = product.image.url,
+    productCurrency = product.price_range.minimum_price.final_price.currency,
+    productPrice = product.price_range.minimum_price.final_price.value;
+
+  return (
+    <div>
+      <h2>{productName}</h2>
+      <h3>{productCurrency} {productPrice}</h3>
       <div>
-        <h2>{productName}</h2>
-        <h3>{productCurrency} {productPrice}</h3>
-        <div dangerouslySetInnerHTML={{__html: productDescription}} />
-        <img src={productImageUrl} width='200'/>
+        <input type='number' value={count} onChange={e => setCount(e.target.value)}/>
+        <button onClick={()=> {console.log(count, product)}}>Add to chart</button>
       </div>
-    )
+      <div dangerouslySetInnerHTML={{ __html: productDescription }} />
+      <img src={productImageUrl} width='200' />
+    </div>
+  )
 }
 
 ProductPage.getInitialProps = ({ reduxStore }) => {
-	// Tick the time once, so we'll have a
-	// valid time before first render
-	const { dispatch } = reduxStore
-	// dispatch({
-	// 	type: 'TICK',
-	// 	light: typeof window === 'object',
-	// 	lastUpdate: Date.now(),
-	// })
+  // Tick the time once, so we'll have a
+  // valid time before first render
+  const { dispatch } = reduxStore
+  // dispatch({
+  // 	type: 'TICK',
+  // 	light: typeof window === 'object',
+  // 	lastUpdate: Date.now(),
+  // })
 
-	return {}
+  return {}
 }
 
 export default compose(withApollo, withRedux)(ProductPage)
