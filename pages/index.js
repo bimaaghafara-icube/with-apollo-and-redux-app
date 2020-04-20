@@ -53,14 +53,16 @@ const IndexPage = (props) => {
 						<ul>
 							{category.children.map(childCategory => (
 								<li>
-									<Link href={`/category/${childCategory.url_key}`}>
+									<Link
+										href={`/category/[...params]`}
+										as={`/category/${childCategory.url_key}`}>
 										<a>{childCategory.name}</a>
 									</Link>
 									<ul>
 										{childCategory.children.map(grandChildCategory => (
 											<li>
 												<Link 
-													href={`/category/${childCategory.url_key}/${grandChildCategory.url_key}`}
+													href={`/category/[...params]`}
 													as={`/category/${childCategory.url_key}/${grandChildCategory.url_key}`}>
 													<a>{grandChildCategory.name}</a>
 												</Link>
