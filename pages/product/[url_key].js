@@ -63,11 +63,20 @@ const ProductPage = () => {
   
     console.log(router)
     console.log('PRODUCT_DETAIL_QUERY: ', data)
+
+    const product = data.products.items[0],
+      productName = product.name,
+      productDescription = product.description.html,
+      productImageUrl = product.image.url,
+      productCurrency = product.price_range.minimum_price.final_price.currency,
+      productPrice = product.price_range.minimum_price.final_price.value;      
   
     return (
       <div>
-        <h2>{data.products.items[0].name}</h2>
-        <img src={data.products.items[0].image.url} width='500'/>
+        <h2>{productName}</h2>
+        <h3>{productCurrency} {productPrice}</h3>
+        <div dangerouslySetInnerHTML={{__html: productDescription}} />
+        <img src={productImageUrl} width='200'/>
       </div>
     )
 }
