@@ -6,6 +6,7 @@ import { compose } from 'redux';
 import { useRouter, Router } from 'next/router';
 import { useState } from "react";
 import { useDispatch, useSelector } from 'react-redux'
+import Link from 'next/link'
 
 const ProductPage = () => {
   const PRODUCT_DETAIL_QUERY = gql`
@@ -62,11 +63,6 @@ const ProductPage = () => {
     { variables: { url_key: router.query.url_key } }
   );
 
-  const counter = useSelector(state => {
-    console.log(state);
-    return state.chartProducts;
-  });
-
   if (loading) return <p>Loading . . .</p>;
   if (error) return <p>ERROR: {error.message}</p>;
   if (!data) return <p>Not found</p>;
@@ -93,6 +89,10 @@ const ProductPage = () => {
       </div>
       <div dangerouslySetInnerHTML={{ __html: productDescription }} />
       <img src={productImageUrl} width='200' />
+
+      <Link href="/chart" as="/chart">
+        chart
+      </Link>
     </div>
   )
 }
